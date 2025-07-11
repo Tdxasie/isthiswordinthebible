@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<link rel="stylesheet" href="style.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Is This Word in the Bible?</title>
+</head>
+
+<body>
+	<div class="container">
+		<div class="header">
+			<h1>📖 Is This Word in the Bible?</h1>
+			<p>Enter any text and see which words appear in the Bible</p>
+		</div>
+
+		<div class="main-content">
+			<div class="input-section">
+				<label for="textInput">Enter your text:</label>
+				<div class="textarea-container">
+					<textarea id="textInput"
+						placeholder="Type or paste your text here... For example: 'The quick brown fox jumps over the lazy dog and finds peace in the garden.'"></textarea>
+				</div>
+				<button class="analyze-btn" onclick="analyzeText()">🔍 Analyze Text</button>
+			</div>
+
+			<div class="results-section">
+				<div class="results-title">Results:</div>
+				<div id="results" class="highlighted-text">
+					Enter some text above and click "Analyze Text" to see which words appear in the Bible!
+				</div>
+
+				<div id="stats" class="stats" style="display: none;">
+					<div class="stat-item">
+						<div class="stat-number" id="totalWords">0</div>
+						<div class="stat-label">Total Words</div>
+					</div>
+					<div class="stat-item">
+						<div class="stat-number" id="bibleWords">0</div>
+						<div class="stat-label">Bible Words</div>
+					</div>
+					<div class="stat-item">
+						<div class="stat-number" id="percentage">0%</div>
+						<div class="stat-label">Bible Coverage</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="assets/bible_fr.js"></script>
+	<script src="script.js"></script>
+</body>
+
+</html>
