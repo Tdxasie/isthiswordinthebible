@@ -33,12 +33,12 @@ function analyzeText() {
     const statsDiv = document.getElementById('stats');
     
     if (!input) {
-        resultsDiv.innerHTML = '<div class="loading">Please enter some text to analyze.</div>';
+        resultsDiv.innerHTML = '<div class="loading">Entrez le texte a analyser</div>';
         statsDiv.style.display = 'none';
         return;
     }
     
-    resultsDiv.innerHTML = '<div class="loading">Analyzing text...</div>';
+    resultsDiv.innerHTML = '<div class="loading">Analyse du texte...</div>';
     statsDiv.style.display = 'none';
     
     // Simulate processing delay for better UX
@@ -99,6 +99,3 @@ document.getElementById('textInput').addEventListener('keydown', function (event
         analyzeText();
     }
 });
-
-// Add some sample text for demonstration
-document.getElementById('textInput').value = "Tu ctrlc v la bible en texte et tu la refine, t'enlève les doublons et tout là bim bam \n Ordonné par ordre alpha";
