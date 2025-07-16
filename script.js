@@ -53,7 +53,7 @@ function analyzeText() {
             result.totalWords > 0 ? Math.round((result.bibleWordsCount / result.totalWords) * 100) + '%' : '0%';
         
         statsDiv.style.display = 'flex';
-    }, 500);
+    }, 100);
 }
 
 function highlightBibleWords(text) {
@@ -72,11 +72,9 @@ function highlightBibleWords(text) {
             if (bibleWords.has(lowerToken)) {
                 bibleWordsCount++;
                 const colorClass = colors[colorIndex % colors.length];
-                const verses = bibleWordToVerses.get(lowerToken) || [];
-                const tooltip = verses.map(v => `${v.ref}: ${v.text}`).join('\n');
-                const safeTooltip = tooltip.replace(/"/g, '&quot;');
 
-                highlightedText += `<span class="bible-word ${colorClass}" title="${safeTooltip}">${token}</span>`;
+                // Replace tooltip with click handler
+                highlightedText += `<span class="bible-word ${colorClass}" onclick="showVerses('${lowerToken}', '${token}')">${token}</span>`;
                 colorIndex++;
             } else {
                 highlightedText += token;
@@ -92,6 +90,93 @@ function highlightBibleWords(text) {
         bibleWordsCount
     };
 }
+
+let currentWordVerses = [];
+let currentDisplayedCount = 0;
+const VERSES_PER_PAGE = 10;
+
+function showVerses(word, displayWord) {
+    const modal = document.getElementById('versesModal');
+    const modalWord = document.getElementById('modalWord');
+    const versesList = document.getElementById('versesList');
+    const verseCount = document.getElementById('verseCount');
+    
+    currentWordVerses = bibleWordToVerses.get(word) || [];
+    currentDisplayedCount = 0;
+    
+    modalWord.textContent = displayWord;
+    verseCount.textContent = `${currentWordVerses.length} verset${currentWordVerses.length > 1 ? 's' : ''} trouvé${currentWordVerses.length > 1 ? 's' : ''}`;
+    
+    versesList.innerHTML = '';
+    loadMoreVerses(word);
+    
+    modal.style.display = 'block';
+}
+
+function loadMoreVerses(word) {
+    const versesList = document.getElementById('versesList');
+    const nextVerses = currentWordVerses.slice(currentDisplayedCount, currentDisplayedCount + VERSES_PER_PAGE);
+    
+    nextVerses.forEach(verse => {
+        const highlightedText = verse.text.replace(
+            new RegExp(`\\b${word}\\b`, 'gi'),
+            `<strong style="color: #3498db;">$&</strong>`
+        );
+        
+        const verseDiv = document.createElement('div');
+        verseDiv.className = 'verse-item';
+        verseDiv.innerHTML = `
+            <div class="verse-ref">${verse.ref}</div>
+            <div class="verse-text">${highlightedText}</div>
+        `;
+        versesList.appendChild(verseDiv);
+    });
+    
+    currentDisplayedCount += nextVerses.length;
+    
+    // Remove any existing "Load More" button
+    const existingBtn = document.getElementById('loadMoreBtn');
+    if (existingBtn) existingBtn.remove();
+    
+    // Add "Load More" button if there are more verses
+    if (currentDisplayedCount < currentWordVerses.length) {
+        const loadMoreBtn = document.createElement('button');
+        loadMoreBtn.id = 'loadMoreBtn';
+        loadMoreBtn.textContent = `Charger ${Math.min(VERSES_PER_PAGE, currentWordVerses.length - currentDisplayedCount)} verset(s) de plus`;
+        loadMoreBtn.style.cssText = `
+            width: 100%;
+            padding: 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        `;
+        loadMoreBtn.onclick = () => loadMoreVerses(word);
+        versesList.appendChild(loadMoreBtn);
+    }
+}
+
+
+function closeModal() {
+    document.getElementById('versesModal').style.display = 'none';
+}
+
+// Close modal when clicking outside
+window.onclick = function (event) {
+    const modal = document.getElementById('versesModal');
+    if (event.target === modal) {
+        closeModal();
+    }
+}
+
+// Close modal with Escape key
+document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+        closeModal();
+    }
+});
 
 // Allow Enter key to trigger analysis
 document.getElementById('textInput').addEventListener('keydown', function (event) {

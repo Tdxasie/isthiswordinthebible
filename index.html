@@ -21,9 +21,13 @@
 				<label for="textInput">Entrer du texte :</label>
 				<div class="textarea-container">
 					<textarea id="textInput"
-						placeholder="Tapez ou collez votre texte ici... Par exemple : 'chu saucé de ouf ma go m'a pépom a la fac, le tarpé quelle a'"></textarea>
+						placeholder="Tapez ou collez votre texte ici..."></textarea>
 				</div>
-				<button class="analyze-btn" onclick="analyzeText()">🔍 Analyser le Texte</button>
+				<div style="display: flex; align-items: center; gap: 10px;">
+					<button class="analyze-btn" onclick="analyzeText()">🔍 Analyser le Texte</button>
+					<code
+						style="background: rgba(0,0,0,0.1); padding: 2px 6px; border-radius: 3px; font-size: 0.8em; color: #666;">Ctrl+Entrée</code>
+				</div>
 			</div>
 
 			<div class="results-section">
@@ -51,6 +55,19 @@
 	</div>
 	<script src="assets/bible_fr.js"></script>
 	<script src="script.js"></script>
+</div>
+
+<!-- Modal for displaying verses -->
+<div id="versesModal" class="modal">
+	<div class="modal-content">
+		<div class="modal-header">
+			<div class="modal-title" id="modalTitle">Versets pour: <span id="modalWord"></span></div>
+			<button class="close-btn" onclick="closeModal()">&times;</button>
+		</div>
+		<div class="verse-count" id="verseCount"></div>
+		<div id="versesList"></div>
+	</div>
+</div>
 </body>
 
 </html>
