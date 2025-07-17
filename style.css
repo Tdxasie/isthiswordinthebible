@@ -131,69 +131,130 @@
 		flex: 1;
 	}
 }
-/* Frequency-based color scheme */
-.frequency-very-low {
-	background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
-	color: white;
-	font-weight: bold;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-	box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
-}
 
-.frequency-low {
-	background: linear-gradient(135deg, #ff9500, #ffb347);
-	color: white;
-	font-weight: bold;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-	box-shadow: 0 2px 8px rgba(255, 149, 0, 0.4);
-}
-
-.frequency-medium-low {
-	background: linear-gradient(135deg, #ffd93d, #ffe066);
+.rarity-common {
+	background: linear-gradient(135deg, #e0e0e0, #f0f0f0);
+	/* Soft light gray */
 	color: #333;
-	font-weight: bold;
-	box-shadow: 0 2px 8px rgba(255, 217, 61, 0.4);
+	font-weight: 500;
+	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
+	box-shadow: 0 2px 6px rgba(155, 155, 155, 0.2);
 }
 
-.frequency-medium {
-	background: linear-gradient(135deg, #6bcf7f, #88d8a3);
-	color: white;
+.rarity-uncommon {
+	background: linear-gradient(135deg, #c3f7d2, #ebffeb);
+	/* Sky blue tones */
+	color: #022705;
 	font-weight: 600;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-	box-shadow: 0 2px 8px rgba(107, 207, 127, 0.4);
+	text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
+	box-shadow: 0 2px 8px rgba(0, 160, 48, 0.25);
 }
 
-.frequency-medium-high {
-	background: linear-gradient(135deg, #4ecdc4, #6dd5db);
-	color: white;
+.rarity-rare {
+	background: linear-gradient(135deg, #fff8e5, #ffe9b9);
+	/* Elegant pink-purple gradient */
+	color: #753f00;
 	font-weight: 600;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-	box-shadow: 0 2px 8px rgba(78, 205, 196, 0.4);
+	text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
+	box-shadow: 0 2px 10px rgba(255, 184, 53, 0.3);
 }
 
-.frequency-high {
-	background: linear-gradient(135deg, #45b7d1, #6cc4db);
-	color: white;
+.rarity-cursed {
+	background: linear-gradient(135deg, #fccfcf, #ffbfbf);
+	/* Soft light gray */
+	color: #ff0707;
 	font-weight: 500;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-	box-shadow: 0 2px 6px rgba(69, 183, 209, 0.4);
+	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
+	box-shadow: 0 2px 6px rgb(228, 171, 171);
 }
 
-.frequency-very-high {
-	background: linear-gradient(135deg, #9b59b6, #b370cf);
-	color: white;
-	font-weight: 500;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-	box-shadow: 0 2px 6px rgba(155, 89, 182, 0.4);
+.rarity-legendary {
+	background: linear-gradient(135deg, #e6f3ff, #b8daff, #87ceeb, #ffffff);
+	/* Holy celestial gradient */
+	color: #2c5282;
+	font-weight: 700;
+	text-shadow:
+		0 0 5px rgba(255, 255, 255, 1),
+		0 0 10px rgba(173, 216, 230, 0.8),
+		0 1px 2px rgba(0, 0, 0, 0.2);
+	box-shadow:
+		0 3px 12px rgba(135, 206, 235, 0.4),
+		0 0 20px rgba(173, 216, 230, 0.5),
+		inset 0 1px 0 rgba(255, 255, 255, 0.4);
+	border: 1px solid rgba(173, 216, 230, 0.6);
+	position: relative;
+	overflow: hidden;
+	animation: legendaryPulse 0.8s ease-in-out infinite alternate;
 }
 
-.frequency-ultra-high {
-	background: linear-gradient(135deg, #95a5a6, #a8b9ba);
-	color: white;
-	font-weight: 500;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-	box-shadow: 0 2px 6px rgba(149, 165, 166, 0.4);
+.rarity-legendary::before {
+	content: '';
+	position: absolute;
+	top: -50%;
+	left: -50%;
+	width: 200%;
+	height: 200%;
+	background: linear-gradient(45deg,
+			transparent,
+			rgba(255, 255, 255, 0.1),
+			transparent);
+	animation: legendaryShine 1.2s ease-in-out infinite;
+	pointer-events: none;
 }
+
+.rarity-legendary::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: radial-gradient(circle at center,
+			rgba(173, 216, 230, 0.2) 0%,
+			transparent 70%);
+	animation: legendaryGlow 0.6s ease-in-out infinite alternate;
+	pointer-events: none;
+}
+
+
+
+
+@keyframes legendaryPulse {
+	0% {
+		box-shadow:
+			0 3px 12px rgba(135, 206, 235, 0.4),
+			0 0 20px rgba(173, 216, 230, 0.5),
+			inset 0 1px 0 rgba(255, 255, 255, 0.4);
+	}
+
+	100% {
+		box-shadow:
+			0 3px 15px rgba(135, 206, 235, 0.6),
+			0 0 30px rgba(173, 216, 230, 0.8),
+			inset 0 1px 0 rgba(255, 255, 255, 0.5);
+	}
+}
+
+@keyframes legendaryShine {
+	0% {
+		transform: translateX(-100%) translateY(-100%) rotate(45deg);
+	}
+
+	100% {
+		transform: translateX(100%) translateY(100%) rotate(45deg);
+	}
+}
+
+@keyframes legendaryGlow {
+	0% {
+		opacity: 0.3;
+	}
+
+	100% {
+		opacity: 0.6;
+	}
+}
+
 
 /* Enhanced bible word styling */
 .bible-word {
@@ -206,17 +267,7 @@
 	margin: 1px;
 	position: relative;
 	font-family: inherit;
-}
-
-.bible-word:hover,
-.bible-word:active {
-	transform: translateY(-2px) scale(1.05);
-	z-index: 10;
-	filter: brightness(1.1);
-}
-
-.bible-word:active {
-	transform: translateY(0) scale(1.02);
+	vertical-align: top;
 }
 
 /* Frequency legend */
