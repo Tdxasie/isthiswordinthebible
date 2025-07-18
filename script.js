@@ -25,7 +25,6 @@ function indexBible() {
         }
     }
     console.log(`Bible indexed with ${bibleWords.size} unique words`);
-    console.log(bibleWordFrequency);
 }
 
 // Adjustable thresholds
@@ -93,21 +92,29 @@ function updateStats(result) {
     const bibleWordsEl = document.getElementById('bibleWords');
     const percentageEl = document.getElementById('percentage');
 
-    // Animate word counts
     animateNumber(totalWordsEl, parseInt(totalWordsEl.textContent) || 0, result.totalWords);
     animateNumber(bibleWordsEl, parseInt(bibleWordsEl.textContent) || 0, result.bibleWordsCount);
 
-    // Nouveau calcul de sainteté pondéré
-    let weightedScore = 0;
-    let maxScore = result.totalWords * rarityWeights["rarity-legendary"];
-    let minScore = result.totalWords * rarityWeights["rarity-cursed"];
+    let positiveScore = 0;
+    let penaltyScore = 0;
 
     for (const [rarityClass, count] of Object.entries(result.rarityCounts)) {
         const weight = rarityWeights[rarityClass] || 0;
-        weightedScore += count * weight;
+        if (weight > 0) {
+            positiveScore += count * weight;
+        } else if (weight < 0) {
+            penaltyScore += count * Math.abs(weight);
+        }
     }
 
-    const holiness = Math.round(((weightedScore - minScore) / (maxScore - minScore)) * 100);
+    let holiness = 100;
+    if (positiveScore > 0) {
+        const corruption = Math.min(penaltyScore / positiveScore, 1); // cap at 100% corruption
+        holiness = Math.round((1 - corruption) * 100);
+    } else if (penaltyScore > 0) {
+        holiness = 0; // Only cursed words
+    }
+
     animateNumber(percentageEl, 0, holiness, "%");
 }
 
@@ -160,6 +167,7 @@ function highlightBibleWords(text) {
                 
                 highlightedText += `<span class="bible-word ${frequencyClass}" onclick="showVerses('${escapedWord}', '${escapedToken}')" title="Rareté: ${frequency} occurrences - Cliquez pour voir les versets">${token}</span>`;
             } else {
+                rarityCounts["rarity-cursed"] = (rarityCounts["rarity-cursed"] || 0) + 1;
                 highlightedText += `<span class="bible-word rarity-cursed" title="MAUDIT" style="cursor: pointer;" onclick="window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank')">${token}</span>`;
             }
         } else {
@@ -174,53 +182,3 @@ function highlightBibleWords(text) {
         rarityCounts     // ← nécessaire pour le score pondéré
     };
 }
-
-
-function showFrequencyLegend() {
-    const freq = document.getElementById('frequency-legend');
-    freq.removeAttribute('hidden');
-}
-
-function closeModal() {
-    const modal = document.getElementById('versesModal');
-    modal.classList.remove('modal-show');
-    modal.style.display = 'none';
-    modal.setAttribute('aria-hidden', 'true');
-    
-    // Return focus to the text input
-    document.getElementById('textInput').focus();
-}
-
-// Event listeners
-document.addEventListener('DOMContentLoaded', function() {
-    // Close modal when clicking outside
-    window.onclick = function(event) {
-        const modal = document.getElementById('versesModal');
-        if (event.target === modal) {
-            closeModal();
-        }
-    };
-
-    // Close modal with Escape key
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape') {
-            closeModal();
-        }
-    });
-
-    // Allow Enter key to trigger analysis
-    const textInput = document.getElementById('textInput');
-    if (textInput) {
-        textInput.addEventListener('keydown', function(event) {
-            if (event.ctrlKey && event.key === 'Enter') {
-                analyzeText();
-            }
-        });
-        
-        // Auto-resize textarea
-        textInput.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = this.scrollHeight + 'px';
-        });
-    }
-});
